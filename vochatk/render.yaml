@@ -6,6 +6,15 @@ services:
     region: singapore
     plan: starter
     branch: main
+    buildFilter:
+      paths:
+        - src/**/*
+        - public/**/*
+        - package.json
+        - package-lock.json
+        - next.config.js
+        - tsconfig.json
+        - Dockerfile
     envVars:
       - key: NODE_ENV
         value: production
@@ -45,12 +54,3 @@ services:
       maxInstances: 1
       targetMemoryPercent: 80
       targetCPUPercent: 80
-    buildFilter:
-      paths:
-        - src/**/*.ts
-        - src/**/*.tsx
-        - package.json
-        - next.config.js
-        - tailwind.config.js
-        - postcss.config.js
-        - tsconfig.json
