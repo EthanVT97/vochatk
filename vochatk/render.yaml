@@ -3,6 +3,9 @@ services:
     name: vochatk
     env: docker
     dockerfilePath: ./Dockerfile
+    region: singapore
+    plan: starter
+    branch: main
     envVars:
       - key: NODE_ENV
         value: production
@@ -30,8 +33,9 @@ services:
         sync: false
       - key: SUPABASE_ANON_KEY
         sync: false
-    autoDeploy: true
     healthCheckPath: /api/health
+    healthCheckTimeout: 100
+    autoDeploy: true
     disk:
       name: tmp
       mountPath: /tmp
@@ -39,7 +43,8 @@ services:
     scaling:
       minInstances: 1
       maxInstances: 1
-      targetMemoryPercent: 60
+      targetMemoryPercent: 80
+      targetCPUPercent: 80
     buildFilter:
       paths:
         - src/**/*.ts
