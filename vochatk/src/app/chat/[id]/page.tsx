@@ -2,9 +2,7 @@
 
 import { FC, useState, useEffect, useRef } from 'react'
 import { useParams } from 'next/navigation'
-import { IoSend } from 'react-icons/io5'
-import { FaUser, FaRobot } from 'react-icons/fa'
-import { BiLoaderAlt } from 'react-icons/bi'
+import { FaUser, FaRobot, FaPaperPlane, FaSpinner } from 'react-icons/fa'
 
 interface Message {
   id: string
@@ -93,7 +91,7 @@ const ChatPage: FC = () => {
   if (!chatInterface) {
     return (
       <div className='flex items-center justify-center min-h-screen bg-gray-50'>
-        <BiLoaderAlt className='w-8 h-8 text-blue-500 animate-spin' />
+        <FaSpinner className='w-8 h-8 text-blue-500 animate-spin' />
       </div>
     )
   }
@@ -145,7 +143,7 @@ const ChatPage: FC = () => {
           ))}
           {isLoading && (
             <div className='flex items-center gap-2 text-gray-500'>
-              <BiLoaderAlt className='w-4 h-4 animate-spin' />
+              <FaSpinner className='w-4 h-4 animate-spin' />
               <span className='text-sm'>Agent is typing...</span>
             </div>
           )}
@@ -169,7 +167,7 @@ const ChatPage: FC = () => {
               disabled={!newMessage.trim() || isLoading}
               className='px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
             >
-              <IoSend className='w-4 h-4' />
+              <FaPaperPlane className='w-4 h-4' />
               Send
             </button>
           </form>
