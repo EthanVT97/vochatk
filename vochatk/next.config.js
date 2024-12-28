@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
     domains: ['wtwtydlslrqjzueilosn.supabase.co'],
   },
@@ -28,9 +27,10 @@ const nextConfig = {
   generateEtags: true,
   compress: true,
   productionBrowserSourceMaps: false,
-  optimizeFonts: true,
   experimental: {
-    serverActions: true,
+    serverActions: {
+      allowedOrigins: ['localhost:3000'],
+    },
   },
   output: 'standalone',
   trailingSlash: false,
