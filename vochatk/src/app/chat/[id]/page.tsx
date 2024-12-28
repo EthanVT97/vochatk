@@ -2,7 +2,6 @@
 
 import { FC, useState, useEffect, useRef } from 'react'
 import { useParams } from 'next/navigation'
-import { BsFillPersonFill, BsRobot, BsSend, BsArrowClockwise } from 'react-icons/bs'
 import { supabase } from '@/lib/supabase'
 
 interface Message {
@@ -19,6 +18,32 @@ interface ChatInterface {
   language?: string
   botEnabled?: boolean
 }
+
+// Simple SVG icons as components
+const UserIcon = () => (
+  <svg className="w-6 h-6 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+  </svg>
+)
+
+const BotIcon = () => (
+  <svg className="w-6 h-6 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2z"/>
+  </svg>
+)
+
+const SendIcon = () => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+  </svg>
+)
+
+const LoadingIcon = () => (
+  <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <circle className="opacity-25" cx="12" cy="12" r="10" strokeWidth="4"/>
+    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+  </svg>
+)
 
 const ChatPage: FC = () => {
   const { id } = useParams()
@@ -145,11 +170,7 @@ const ChatPage: FC = () => {
                 <p className="text-sm">{message.content}</p>
               </div>
               <div className="flex-shrink-0">
-                {message.sender === 'user' ? (
-                  <BsFillPersonFill className="w-6 h-6 text-gray-500" />
-                ) : (
-                  <BsRobot className="w-6 h-6 text-gray-500" />
-                )}
+                {message.sender === 'user' ? <UserIcon /> : <BotIcon />}
               </div>
             </div>
           </div>
@@ -173,11 +194,7 @@ const ChatPage: FC = () => {
             disabled={isLoading}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
-            {isLoading ? (
-              <BsArrowClockwise className="w-5 h-5 animate-spin" />
-            ) : (
-              <BsSend className="w-5 h-5" />
-            )}
+            {isLoading ? <LoadingIcon /> : <SendIcon />}
           </button>
         </div>
       </form>
