@@ -2,7 +2,9 @@
 
 import { FC, useState, useEffect, useRef } from 'react'
 import { useParams } from 'next/navigation'
-import { Send, User, Bot, Loader2 } from 'lucide-react'
+import { IoSend } from 'react-icons/io5'
+import { FaUser, FaRobot } from 'react-icons/fa'
+import { BiLoaderAlt } from 'react-icons/bi'
 
 interface Message {
   id: string
@@ -91,7 +93,7 @@ const ChatPage: FC = () => {
   if (!chatInterface) {
     return (
       <div className='flex items-center justify-center min-h-screen bg-gray-50'>
-        <Loader2 className='w-8 h-8 text-blue-500 animate-spin' />
+        <BiLoaderAlt className='w-8 h-8 text-blue-500 animate-spin' />
       </div>
     )
   }
@@ -122,9 +124,9 @@ const ChatPage: FC = () => {
                 message.sender === 'user' ? 'bg-blue-100' : 'bg-gray-100'
               }`}>
                 {message.sender === 'user' ? (
-                  <User className='w-5 h-5 text-blue-600' />
+                  <FaUser className='w-5 h-5 text-blue-600' />
                 ) : (
-                  <Bot className='w-5 h-5 text-gray-600' />
+                  <FaRobot className='w-5 h-5 text-gray-600' />
                 )}
               </div>
               <div className={`flex flex-col ${message.sender === 'user' ? 'items-end' : ''}`}>
@@ -143,7 +145,7 @@ const ChatPage: FC = () => {
           ))}
           {isLoading && (
             <div className='flex items-center gap-2 text-gray-500'>
-              <Loader2 className='w-4 h-4 animate-spin' />
+              <BiLoaderAlt className='w-4 h-4 animate-spin' />
               <span className='text-sm'>Agent is typing...</span>
             </div>
           )}
@@ -167,7 +169,7 @@ const ChatPage: FC = () => {
               disabled={!newMessage.trim() || isLoading}
               className='px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
             >
-              <Send className='w-4 h-4' />
+              <IoSend className='w-4 h-4' />
               Send
             </button>
           </form>
@@ -177,4 +179,4 @@ const ChatPage: FC = () => {
   )
 }
 
-export default ChatPage 
+export default ChatPage
