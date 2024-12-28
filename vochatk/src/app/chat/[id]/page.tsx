@@ -3,6 +3,7 @@
 import { FC, useState, useEffect, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import { FaUser, FaRobot, FaPaperPlane, FaSpinner } from 'react-icons/fa'
+import { supabase } from '@/lib/supabase'
 
 interface Message {
   id: string
@@ -24,31 +25,33 @@ const ChatPage: FC = () => {
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [chatInterface, setChatInterface] = useState<ChatInterface | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  // Simulate fetching chat interface details
+  // Fetch chat interface details
   useEffect(() => {
-    // In a real app, fetch from your API
-    const mockInterface: ChatInterface = {
-      id: id as string,
-      name: 'Customer Support',
-      welcomeMessage: 'Welcome to our customer support! How can we help you today?',
-      language: 'English',
-      botEnabled: true
-    }
-    setChatInterface(mockInterface)
+    const fetchChatInterface = async () => {
+      try {
+        setIsLoading(true)
+        const { data, error } = await supabase
+          .from('chat_interfaces')
+          .select('*')
+          .eq('id', id)
+          .single()
 
-    // Add welcome message
-    if (mockInterface.welcomeMessage) {
-      setMessages([
-        {
-          id: Date.now().toString(),
-          content: mockInterface.welcomeMessage,
-          sender: 'bot',
-          timestamp: new Date().toISOString()
-        }
-      ])
+        if (error) throw error
+        setChatInterface(data)
+      } catch (err) {
+        console.error('Error fetching chat interface:', err)
+        setError('Failed to load chat interface')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (id) {
+      fetchChatInterface()
     }
   }, [id])
 
@@ -64,115 +67,120 @@ const ChatPage: FC = () => {
     e.preventDefault()
     if (!newMessage.trim()) return
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: newMessage,
-      sender: 'user',
-      timestamp: new Date().toISOString()
-    }
-
-    setMessages(prev => [...prev, userMessage])
-    setNewMessage('')
-    setIsLoading(true)
-
-    // Simulate bot response
-    setTimeout(() => {
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: 'Thank you for your message. An agent will be with you shortly.',
-        sender: 'bot',
-        timestamp: new Date().toISOString()
+    try {
+      setIsLoading(true)
+      const messageId = Date.now().toString()
+      const newMsg: Message = {
+        id: messageId,
+        content: newMessage,
+        sender: 'user',
+        timestamp: new Date().toISOString(),
       }
-      setMessages(prev => [...prev, botMessage])
+
+      setMessages(prev => [...prev, newMsg])
+      setNewMessage('')
+
+      // Send message to Supabase
+      const { error } = await supabase
+        .from('messages')
+        .insert([{
+          chat_id: id,
+          content: newMessage,
+          sender_type: 'user'
+        }])
+
+      if (error) throw error
+
+    } catch (err) {
+      console.error('Error sending message:', err)
+      setError('Failed to send message')
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
   }
 
-  if (!chatInterface) {
+  if (error) {
     return (
-      <div className='flex items-center justify-center min-h-screen bg-gray-50'>
-        <FaSpinner className='w-8 h-8 text-blue-500 animate-spin' />
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="p-6 bg-white rounded-lg shadow-lg">
+          <h2 className="text-xl font-bold text-red-600 mb-2">Error</h2>
+          <p className="text-gray-700">{error}</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className='flex flex-col h-screen bg-gray-50'>
-      {/* Header */}
-      <header className='bg-white border-b border-gray-200 px-4 py-4'>
-        <div className='max-w-4xl mx-auto flex items-center justify-between'>
-          <h1 className='text-xl font-semibold text-gray-800'>{chatInterface.name}</h1>
-          <span className='px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full'>
-            Online
-          </span>
-        </div>
-      </header>
+    <div className="flex flex-col h-screen bg-gray-100">
+      {/* Chat header */}
+      <div className="bg-white shadow-sm p-4">
+        <h1 className="text-xl font-semibold">
+          {chatInterface?.name || 'Chat'}
+        </h1>
+      </div>
 
-      {/* Chat Messages */}
-      <div className='flex-1 overflow-y-auto p-4'>
-        <div className='max-w-4xl mx-auto space-y-4'>
-          {messages.map(message => (
+      {/* Messages container */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={`flex ${
+              message.sender === 'user' ? 'justify-end' : 'justify-start'
+            }`}
+          >
             <div
-              key={message.id}
-              className={`flex items-start gap-3 ${
-                message.sender === 'user' ? 'flex-row-reverse' : ''
+              className={`flex items-start space-x-2 max-w-[70%] ${
+                message.sender === 'user'
+                  ? 'flex-row-reverse space-x-reverse'
+                  : 'flex-row'
               }`}
             >
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                message.sender === 'user' ? 'bg-blue-100' : 'bg-gray-100'
-              }`}>
-                {message.sender === 'user' ? (
-                  <FaUser className='w-5 h-5 text-blue-600' />
-                ) : (
-                  <FaRobot className='w-5 h-5 text-gray-600' />
-                )}
-              </div>
-              <div className={`flex flex-col ${message.sender === 'user' ? 'items-end' : ''}`}>
-                <div className={`px-4 py-2 rounded-lg max-w-lg ${
+              <div
+                className={`p-3 rounded-lg ${
                   message.sender === 'user'
                     ? 'bg-blue-500 text-white'
-                    : 'bg-white border border-gray-200'
-                }`}>
-                  <p className='text-sm'>{message.content}</p>
-                </div>
-                <span className='text-xs text-gray-500 mt-1'>
-                  {new Date(message.timestamp).toLocaleTimeString()}
-                </span>
+                    : 'bg-gray-200 text-gray-800'
+                }`}
+              >
+                <p className="text-sm">{message.content}</p>
+              </div>
+              <div className="flex-shrink-0">
+                {message.sender === 'user' ? (
+                  <FaUser className="w-6 h-6 text-gray-500" />
+                ) : (
+                  <FaRobot className="w-6 h-6 text-gray-500" />
+                )}
               </div>
             </div>
-          ))}
-          {isLoading && (
-            <div className='flex items-center gap-2 text-gray-500'>
-              <FaSpinner className='w-4 h-4 animate-spin' />
-              <span className='text-sm'>Agent is typing...</span>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Message Input */}
-      <div className='bg-white border-t border-gray-200 px-4 py-4'>
-        <div className='max-w-4xl mx-auto'>
-          <form onSubmit={handleSendMessage} className='flex items-center gap-4'>
-            <input
-              type='text'
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder='Type your message...'
-              className='flex-1 px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500'
-            />
-            <button
-              type='submit'
-              disabled={!newMessage.trim() || isLoading}
-              className='px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
-            >
-              <FaPaperPlane className='w-4 h-4' />
-              Send
-            </button>
-          </form>
+      {/* Message input */}
+      <form onSubmit={handleSendMessage} className="p-4 bg-white shadow-t">
+        <div className="flex space-x-2">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={isLoading}
+          />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+          >
+            {isLoading ? (
+              <FaSpinner className="w-5 h-5 animate-spin" />
+            ) : (
+              <FaPaperPlane className="w-5 h-5" />
+            )}
+          </button>
         </div>
-      </div>
+      </form>
     </div>
   )
 }

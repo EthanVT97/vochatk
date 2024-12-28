@@ -13,9 +13,15 @@ services:
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_SUPABASE_URL
-        sync: false
+        value: https://dpewvagbzhhrpplvphui.supabase.co
       - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
-        sync: false
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwZXd2YWdiemhocnBwbHZwaHVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUzNjQ4NDEsImV4cCI6MjA1MDk0MDg0MX0.aO4yJ_funzHT95b8VwLyvvOtHmzLIIRbZZCktCEYuPs
+      - key: POSTGRES_DATABASE
+        value: postgres
+      - key: POSTGRES_HOST
+        value: db.dpewvagbzhhrpplvphui.supabase.co
+      - key: POSTGRES_USER
+        value: postgres
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY
@@ -28,13 +34,7 @@ services:
         sync: false
       - key: POSTGRES_URL_NON_POOLING
         sync: false
-      - key: POSTGRES_USER
-        sync: false
       - key: POSTGRES_PASSWORD
-        sync: false
-      - key: POSTGRES_DATABASE
-        sync: false
-      - key: POSTGRES_HOST
         sync: false
       - key: PORT
         value: 3000
