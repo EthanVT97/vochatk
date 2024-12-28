@@ -2,7 +2,7 @@
 
 import { FC, useState, useEffect, useRef } from 'react'
 import { useParams } from 'next/navigation'
-import { FaUser, FaRobot, FaPaperPlane, FaSpinner } from 'react-icons/fa'
+import { BsFillPersonFill, BsRobot, BsSend, BsArrowClockwise } from 'react-icons/bs'
 import { supabase } from '@/lib/supabase'
 
 interface Message {
@@ -146,9 +146,9 @@ const ChatPage: FC = () => {
               </div>
               <div className="flex-shrink-0">
                 {message.sender === 'user' ? (
-                  <FaUser className="w-6 h-6 text-gray-500" />
+                  <BsFillPersonFill className="w-6 h-6 text-gray-500" />
                 ) : (
-                  <FaRobot className="w-6 h-6 text-gray-500" />
+                  <BsRobot className="w-6 h-6 text-gray-500" />
                 )}
               </div>
             </div>
@@ -174,9 +174,9 @@ const ChatPage: FC = () => {
             className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
           >
             {isLoading ? (
-              <FaSpinner className="w-5 h-5 animate-spin" />
+              <BsArrowClockwise className="w-5 h-5 animate-spin" />
             ) : (
-              <FaPaperPlane className="w-5 h-5" />
+              <BsSend className="w-5 h-5" />
             )}
           </button>
         </div>
