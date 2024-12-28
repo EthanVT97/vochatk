@@ -3,7 +3,10 @@ services:
     name: vochatk
     env: node
     buildCommand: |
-      npm install
+      npm cache clean --force
+      rm -rf node_modules
+      rm -rf .next
+      npm install --legacy-peer-deps
       npm run build
     startCommand: npm start
     envVars:
