@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['wtwtydlslrqjzueilosn.supabase.co'],
+    domains: ['dpewvagbzhhrpplvphui.supabase.co'],
   },
   env: {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -27,27 +27,6 @@ const nextConfig = {
   generateEtags: true,
   compress: true,
   productionBrowserSourceMaps: false,
-  experimental: {
-    serverActions: {
-      allowedOrigins: ['localhost:3000'],
-    },
-  },
-  output: 'standalone',
-  trailingSlash: false,
-  basePath: '',
-  distDir: '.next',
-  cleanDistDir: true,
-  assetPrefix: '',
-  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-      };
-    }
-    return config;
-  },
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig
