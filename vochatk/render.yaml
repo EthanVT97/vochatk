@@ -6,9 +6,9 @@ services:
       npm cache clean --force
       rm -rf node_modules
       rm -rf .next
-      rm -f next.config.ts
-      rm -f tailwind.config.ts
-      rm -f postcss.config.mjs
+      find . -name "next.config.ts" -type f -delete
+      find . -name "tailwind.config.ts" -type f -delete
+      find . -name "postcss.config.mjs" -type f -delete
       npm ci
       NODE_ENV=production npm run build
     startCommand: npm start
