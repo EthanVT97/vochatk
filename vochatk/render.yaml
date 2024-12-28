@@ -1,13 +1,11 @@
 services:
   - type: web
     name: vochatk
-    env: node
-    buildCommand: npm install && npm run build
-    startCommand: npm start
+    env: docker
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: NODE_ENV
         value: production
-        sync: false
       - key: NEXT_PUBLIC_SUPABASE_URL
         sync: false
       - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
