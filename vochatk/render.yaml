@@ -6,7 +6,7 @@ services:
       npm cache clean --force
       rm -rf node_modules
       rm -rf .next
-      npm install --legacy-peer-deps
+      npm ci
       NODE_ENV=production npm run build
     startCommand: npm start
     envVars:
@@ -56,3 +56,4 @@ services:
         - next.config.js
         - tailwind.config.js
         - postcss.config.js
+        - tsconfig.json
