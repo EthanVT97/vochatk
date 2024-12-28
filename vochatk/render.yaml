@@ -2,34 +2,15 @@ services:
   - type: web
     name: vochatk
     env: node
-    buildCommand: |
-      npm cache clean --force
-      rm -rf node_modules
-      rm -rf .next
-      find . -name "next.config.ts" -type f -delete
-      find . -name "tailwind.config.ts" -type f -delete
-      find . -name "postcss.config.mjs" -type f -delete
-      npm ci
-      NODE_ENV=production npm run build
+    buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
+        sync: false
       - key: NEXT_PUBLIC_SUPABASE_URL
-        value: https://dpewvagbzhhrpplvphui.supabase.co
+        sync: false
       - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
-        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwZXd2YWdiemhocnBwbHZwaHVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUzNjQ4NDEsImV4cCI6MjA1MDk0MDg0MX0.aO4yJ_funzHT95b8VwLyvvOtHmzLIIRbZZCktCEYuPs
-      - key: POSTGRES_DATABASE
-        value: postgres
-      - key: POSTGRES_HOST
-        value: db.dpewvagbzhhrpplvphui.supabase.co
-      - key: POSTGRES_USER
-        value: postgres
-      - key: SUPABASE_URL
-        sync: false
-      - key: SUPABASE_SERVICE_ROLE_KEY
-        sync: false
-      - key: SUPABASE_JWT_SECRET
         sync: false
       - key: POSTGRES_URL
         sync: false
@@ -37,10 +18,20 @@ services:
         sync: false
       - key: POSTGRES_URL_NON_POOLING
         sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: POSTGRES_USER
+        sync: false
       - key: POSTGRES_PASSWORD
         sync: false
-      - key: PORT
-        value: 3000
+      - key: POSTGRES_DATABASE
+        sync: false
+      - key: POSTGRES_HOST
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
     autoDeploy: true
     healthCheckPath: /api/health
     disk:
