@@ -53,5 +53,5 @@ services:
         - src/**/*.tsx
         - package.json
         - next.config.js
-        - tailwind.config.ts
-        - postcss.config.mjs
+        - tailwind.config.js
+        - postcss.config.js
