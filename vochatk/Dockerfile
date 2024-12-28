@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:20-alpine AS deps
+FROM node:20.10.0-alpine AS deps
 RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
@@ -7,7 +7,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 # Rebuild the source code only when needed
-FROM node:20-alpine AS builder
+FROM node:20.10.0-alpine AS builder
 
 WORKDIR /app
 
@@ -15,13 +15,12 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN npm run build
 
 # Production image, copy all the files and run next
-FROM node:20-alpine AS runner
+FROM node:20.10.0-alpine AS runner
 
 WORKDIR /app
 
