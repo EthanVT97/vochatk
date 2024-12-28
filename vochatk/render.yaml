@@ -3,10 +3,14 @@ services:
     name: vochatk
     env: node
     buildCommand: |
+      export NODE_ENV=production
       npm cache clean --force
       rm -rf node_modules
-      npm install
-      npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
+      rm -rf .next
+      rm -f package-lock.json
+      npm install --legacy-peer-deps
+      npm install -D tailwindcss@3.4.1 postcss@8.4.33 autoprefixer@10.4.17
+      npm install next@13.5.6
       npx tailwindcss init -p
       npm run build
     startCommand: npm start
