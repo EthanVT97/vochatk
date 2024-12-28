@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: vochatk
+    env: node
+    buildCommand: npm install -D tailwindcss postcss autoprefixer && npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: POSTGRES_URL
+        sync: false
+      - key: POSTGRES_PRISMA_URL
+        sync: false
+      - key: POSTGRES_URL_NON_POOLING
+        sync: false
+      - key: POSTGRES_USER
+        sync: false
+      - key: POSTGRES_PASSWORD
+        sync: false
+      - key: POSTGRES_DATABASE
+        sync: false
+      - key: POSTGRES_HOST
+        sync: false
+      - key: PORT
+        value: 3000
+    autoDeploy: true
+    healthCheckPath: /api/health
+    disk:
+      name: tmp
+      mountPath: /tmp
+      sizeGB: 1
+    scaling:
+      minInstances: 1
+      maxInstances: 1
+      targetMemoryPercent: 60
+    buildFilter:
+      paths:
+        - src/**/*.ts
+        - src/**/*.tsx
+        - package.json
+        - next.config.js
+        - tailwind.config.ts
+        - postcss.config.mjs
