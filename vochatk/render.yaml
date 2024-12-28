@@ -2,7 +2,7 @@ services:
   - type: web
     name: vochatk
     env: node
-    buildCommand: npm install -D tailwindcss postcss autoprefixer && npm install && npm run build
+    buildCommand: npm install && npm install -D tailwindcss@latest postcss@latest autoprefixer@latest && npx tailwindcss init -p && npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
