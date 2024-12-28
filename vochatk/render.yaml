@@ -3,14 +3,8 @@ services:
     name: vochatk
     env: node
     buildCommand: |
-      npm cache clean --force
-      rm -rf node_modules
-      rm -rf .next
-      rm -f package-lock.json
       npm install
-      npm install next@13.5.6 --save
-      npm install lucide-react@latest @types/react@18 @types/node@20 --save-dev
-      NODE_ENV=production npm run build
+      npm run build
     startCommand: npm start
     envVars:
       - key: NODE_ENV
